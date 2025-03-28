@@ -1,0 +1,242 @@
+
+#include "params.h"
+#include "crc32.h"
+#include "lz.h"
+
+struct params param2;
+ct_assert( sizeof(param2) == FLASH_PAGE_SIZE ); // Ajustar tama�o de par�metros
+
+static unsigned char pages_n, page_i;
+static unsigned char params_get_values( void );
+
+extern char _params_size[], _params_start_address[];
+
+void params_init()
+{
+	pages_n = (uint32_t) _params_size / FLASH_PAGE_SIZE;
+	page_i  = params_get_values();
+}
+
+static unsigned char params_get_values()
+{
+    for( unsigned char i = 0; i < pages_n; i++ )
+    {
+        memcpy( (void *) &param2, (uint32_t *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * i ), sizeof(param2) );
+
+//      if ( param2.crc == HAL_CRC_Calculate( &hcrc, (uint32_t *)&param2, sizeof(param2)-sizeof(param2.crc) ) ) {
+        if( param2.crc == crc32( (char *) &param2, sizeof(param2)-sizeof(param2.crc)-sizeof(param2.align_crc), 0xFFFFFFFF )) {
+            return i;
+        }
+    }
+
+    memset( (void *) &param2, '\0', sizeof(param2) );
+    return 0;
+}
+
+/**
+  * @brief  Gets the page of a given address
+  * @param  Addr: Address of the FLASH Memory
+  * @retval The page of a given address
+  */
+static uint32_t GetPage(uint32_t Addr)
+{
+  uint32_t page = 0;
+
+  if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
+  {
+    /* Bank 1 */
+    page = (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
+  }
+  else
+  {
+    /* Bank 2 */
+    page = (Addr - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
+  }
+
+  return page;
+}
+
+/**
+  * @brief  Gets the internal FLASH memory bank of a given address.
+  * @param  Addr Address of the FLASH Memory.
+  * @retval @ref FLASH_BANK_1.
+  */
+static uint32_t GetBank(uint32_t Addr)
+{
+	uint32_t bank = 0;
+	if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
+	{
+		/* Bank 1 */
+		bank = FLASH_BANK_1;
+	}
+	else
+	{
+		/* Bank 2 */
+		bank = FLASH_BANK_2;
+	}
+	return bank;
+}
+
+void params_check_for_changes()
+{
+	uint32_t flash_error, flash_page, flash_bank;
+
+	if (page_i > 2) {
+		asm("nop");
+	}
+
+	if( memcmp((void *) &param2,
+			   (uint32_t *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * page_i ),
+			   sizeof(param2)) ) {
+        unsigned char i, s;
+        FLASH_EraseInitTypeDef EraseInitStruct;
+        uint32_t 			   PAGEError = 0;
+
+        /* Unlock the Flash to enable the flash control register access *************/
+		HAL_FLASH_Unlock();
+		/* Clear OPTVERR bit set on virgin samples */
+		__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_SR_ERRORS);
+
+		/* Get the 1st page to erase */
+		flash_page = GetPage((uint32_t) _params_start_address + FLASH_PAGE_SIZE * 0);
+		flash_bank = GetBank((uint32_t) _params_start_address + FLASH_PAGE_SIZE * 0);
+		/* Fill EraseInit structure*/
+		EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+		EraseInitStruct.Banks     = flash_bank;
+		EraseInitStruct.Page      = flash_page;
+		EraseInitStruct.NbPages   = 1;
+        HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError);
+
+		param2.crc = crc32( (char *) &param2, sizeof(param2) - sizeof(param2.crc) - sizeof(param2.align_crc), 0xFFFFFFFF );
+
+        for( i = 0, s = page_i; i < pages_n; i++ ) {
+            if( s < pages_n - 1 ) {
+            	s++;
+            }
+            else {
+            	s = 0;
+            }
+
+            /* Get the 1st page to erase */
+            flash_page = GetPage((uint32_t) _params_start_address + FLASH_PAGE_SIZE * s);
+            /* Fill EraseInit structure*/
+            EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+            EraseInitStruct.Banks     = GetBank((uint32_t) _params_start_address + FLASH_PAGE_SIZE * s);
+            EraseInitStruct.Page      = flash_page;
+            EraseInitStruct.NbPages   = 1;
+
+            if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) == HAL_OK) {
+            	uint8_t *data = (uint8_t *) &param2;
+//            	uint64_t tosave;
+            	uint32_t add;
+            	HAL_StatusTypeDef r;
+            	for ( uint32_t j = 0, k = 0; j < FLASH_PAGE_SIZE; j+=16, k++ ) {
+//            		tosave = data[k];
+            		add    = (uint32_t) _params_start_address + FLASH_PAGE_SIZE * s + j;
+            		r 	   = HAL_FLASH_Program(
+            					FLASH_TYPEPROGRAM_QUADWORD,
+								add,
+								(uint32_t)((data + j)));
+
+            		if ( r != HAL_OK ) {
+            			flash_error = HAL_FLASH_GetError();
+            			if (HAL_FLASH_ERROR_WRP == flash_error) {
+            				UNUSED(flash_error);
+            			}
+            			break;
+            		}
+            	}
+
+            	if ( r != HAL_OK ) {
+            		continue;
+            	}
+
+			    struct params *paramF;
+				paramF = (struct params *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * s );
+				if( paramF->crc == crc32( (char *) paramF, sizeof(param2) - sizeof(param2.crc) - sizeof(param2.align_crc), 0xFFFFFFFF )) {
+					paramF = (struct params *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * page_i );
+					r 	   = HAL_FLASH_Program(
+								FLASH_TYPEPROGRAM_QUADWORD,
+								(uint32_t) &(paramF->crc),
+								(uint64_t)0 );
+
+					if ( r == HAL_OK ) {
+						page_i = s;
+						break;
+					}
+				}
+			} else {
+				flash_error = HAL_FLASH_GetError();
+    			if (HAL_FLASH_ERROR_WRP == flash_error) {
+    				UNUSED(flash_error);
+    			}
+			}
+        }
+
+        HAL_FLASH_Lock();
+    }
+}
+
+#if 0
+void params_check_for_changes()
+{
+    if( memcmp( (void *) &param2, (uint32_t *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * page_i ), sizeof(param2)) )
+    {
+    	/* Unlock the Flash to enable the flash control register access *************/
+    	HAL_FLASH_Unlock();
+    	/* Clear OPTVERR bit set on virgin samples */
+    	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_SR_ERRORS);
+
+    	param2.crc = crc32( (char *) &param2, sizeof(param2) - sizeof(param2.crc), 0xFFFFFFFF );//HAL_CRC_Calculate( &hcrc, (uint32_t *)&param2, sizeof(param2)-sizeof(param2.crc) );
+
+        unsigned char i, s;
+        FLASH_EraseInitTypeDef EraseInitStruct;
+        uint32_t PAGEError = 0;
+        for( i = 0, s = page_i; i < pages_n; i++ )
+        {
+            if( s < pages_n - 1 ) s++;
+            else s = 0;
+
+            /* Fill EraseInit structure*/
+            EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+            EraseInitStruct.Banks     = FLASH_BANK_1;
+            EraseInitStruct.Page      = (uint32_t) _params_start_address + FLASH_PAGE_SIZE * s ;
+
+            if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK) {
+				uint32_t *data = (uint32_t *) &param2;
+				HAL_StatusTypeDef r;
+				for( uint32_t j = 0, k = 0; j < FLASH_PAGE_SIZE; j+=4, k++ )
+				{
+					r = HAL_FLASH_Program( FLASH_TYPEPROGRAM_DOUBLEWORD,
+							           (uint32_t) _params_start_address + FLASH_PAGE_SIZE * s + j,
+									   (uint64_t)data[ k ]);
+					if( r != HAL_OK ) {
+						break;
+					}
+				}
+
+				if( r != HAL_OK ) {
+					continue;
+				}
+
+			    struct params *paramF;
+				paramF = (struct params *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * s );
+//				if( paramF->crc == HAL_CRC_Calculate( &hcrc, (uint32_t *) paramF, sizeof(param2) - sizeof(param2.crc)) ) {
+				if( paramF->crc == crc32( (char *) paramF, sizeof(param2) - sizeof(param2.crc), 0xFFFFFFFF )) {
+					paramF = (struct params *)( (uint32_t) _params_start_address + FLASH_PAGE_SIZE * page_i );
+					r = HAL_FLASH_Program( FLASH_TYPEPROGRAM_DOUBLEWORD,
+							               (uint32_t) &(paramF->crc),
+										   (uint64_t)0 );
+					if( r == HAL_OK )
+					{
+						page_i = s;
+						break;
+					}
+				}
+			}
+        }
+
+        HAL_FLASH_Lock();
+    }
+}
+#endif

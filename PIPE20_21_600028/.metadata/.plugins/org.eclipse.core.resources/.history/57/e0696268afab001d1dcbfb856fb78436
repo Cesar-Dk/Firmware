@@ -1,0 +1,420 @@
+/*
+ * test_prod.c
+ *
+ *  Created on: 8 april 2020
+ *      Author: Sergio Millán López
+ */
+#include "test_prod.h"
+#include "ME910.h"
+#include "tick.h"
+#include "leds.h"
+#if defined(MBUS)
+#include "mbus.h"
+#elif defined(UNE82326)
+#include "une82326.h"
+#endif
+#include "ad.h"
+#include "modbus.h"
+#include "modbus_sensors.h"
+#include "pulses.h"
+
+#define OK  (1)
+#define NOK (0)
+
+#define PORT_TEST_IN     (UC_LED_WHITE_GPIO_Port)
+#define PIN_TEST_IN      (UC_LED_WHITE_Pin)
+#define PORT_TEST_IN_2   (UC_EXT_IO2_GPIO_Port)
+#define PIN_TEST_IN_2    (UC_EXT_IO2_Pin)
+
+typedef enum {
+	ERROR_LEDS,
+	ERROR_NB,
+	ERROR_MBUS,
+	ERROR_MODBUS,
+	ERROR_SENSOR,
+	ERROR_PULSE,
+	ERROR_FINAL,
+	ERROR_LAST
+} error_index ;
+
+static uint8_t  run = 0;
+error_index     error[ ERROR_LAST ];
+
+extern uint32_t reed_on, tamper_on;
+
+static void __initPinStructure(GPIO_InitTypeDef GPIO_InitStructure, GPIO_TypeDef *pin_port,  uint32_t in_out, uint32_t GPIO_PuPd, uint32_t num_pin)
+{
+    GPIO_InitStructure.Pin   = num_pin;
+    GPIO_InitStructure.Mode  = in_out;
+    GPIO_InitStructure.Pull  = GPIO_PuPd;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    __HAL_RCC_GPIOH_CLK_ENABLE();
+    HAL_GPIO_Init( pin_port, &GPIO_InitStructure );
+}
+
+static int8_t __testDetection( void )
+{
+    static enum
+    {
+       INIT, READ_PIN, DEBOUNCE, RUN_TEST, EXIT,
+    } status = INIT;
+
+    GPIO_InitTypeDef GPIOLED_1_InitStructure;
+    static uint32_t init_time = 0, tick = 0, debounce = 0;
+    int8_t ret = 0;
+
+    switch (status) {
+    case INIT:
+        init_time = Tick_Get(SECONDS);
+        HAL_GPIO_WritePin(GPIOH, UC_LED_WHITE_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(PORT_TEST_IN_2, PIN_TEST_IN_2, GPIO_PIN_SET);
+        __initPinStructure(GPIOLED_1_InitStructure, PORT_TEST_IN, GPIO_MODE_INPUT, GPIO_PULLUP, PIN_TEST_IN);
+        __initPinStructure(GPIOLED_1_InitStructure, PORT_TEST_IN_2, GPIO_MODE_INPUT, GPIO_PULLUP, PIN_TEST_IN_2);
+        status++;
+        break;
+    case READ_PIN:
+        if ((Tick_Get(SECONDS) - init_time) < 5) {
+            if (( GPIO_PIN_RESET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) && ( GPIO_PIN_RESET == HAL_GPIO_ReadPin( PORT_TEST_IN_2, PIN_TEST_IN_2 ) )) {
+                tick = Tick_Get(SECONDS);
+                status++;
+            }
+        } else {
+            status = EXIT;
+        }
+        break;
+    case DEBOUNCE:
+        if ((Tick_Get(SECONDS) - tick) <= 3) {
+        	if (( GPIO_PIN_RESET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) && ( GPIO_PIN_RESET == HAL_GPIO_ReadPin( PORT_TEST_IN_2, PIN_TEST_IN_2 ) )) {
+                debounce++;
+            } else {
+                debounce = 0;
+            }
+        }
+        else {
+            if (debounce >= 0) {
+                tick = Tick_Get(SECONDS);
+                status++;
+            } else {
+                status = EXIT;
+            }
+        }
+        break;
+    case RUN_TEST:
+        ret = 1;
+        break;
+    case EXIT:
+        ret = -1;
+        break;
+    }
+    return ret;
+}
+
+__STATIC_INLINE void __ledsON( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_LED,    PIN_TEST_LED,    GPIO_PIN_SET );
+    HAL_GPIO_WritePin( PORT_TEST_MBUS,   PIN_TEST_MBUS,   GPIO_PIN_SET );
+    HAL_GPIO_WritePin( PORT_TEST_MODBUS, PIN_TEST_MODBUS, GPIO_PIN_SET );
+    HAL_GPIO_WritePin( PORT_TEST_SENSOR, PIN_TEST_SENSOR, GPIO_PIN_SET );
+}
+
+__STATIC_INLINE void __ledsOff( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_LED,    PIN_TEST_LED,    GPIO_PIN_RESET );
+    HAL_GPIO_WritePin( PORT_TEST_MBUS,   PIN_TEST_MBUS,   GPIO_PIN_RESET );
+    HAL_GPIO_WritePin( PORT_TEST_MODBUS, PIN_TEST_MODBUS, GPIO_PIN_RESET );
+    HAL_GPIO_WritePin( PORT_TEST_SENSOR, PIN_TEST_SENSOR, GPIO_PIN_RESET );
+}
+
+__STATIC_INLINE void __ledCloudOn( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_LED, PIN_TEST_LED, GPIO_PIN_SET  );
+}
+
+__STATIC_INLINE void __ledMBEnOn( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_MBUS, PIN_TEST_MBUS, GPIO_PIN_SET );
+}
+
+__STATIC_INLINE void __ledMBEnOff( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_MBUS, PIN_TEST_MBUS, GPIO_PIN_RESET );
+}
+
+__STATIC_INLINE void __ledModBusEnOn( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_MODBUS, PIN_TEST_MODBUS, GPIO_PIN_SET );
+}
+
+__STATIC_INLINE void __ledModBusEnOff( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_MODBUS, PIN_TEST_MODBUS, GPIO_PIN_RESET );
+}
+
+__STATIC_INLINE void __ledSEnOn( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_SENSOR, PIN_TEST_SENSOR, GPIO_PIN_SET  );
+}
+
+__STATIC_INLINE void __ledSEnOff( void )
+{
+	leds_set_NET_status(TEST_MODULE);
+	leds_set_METER_status(METER_TEST_MODULE);
+
+    HAL_GPIO_WritePin( PORT_TEST_SENSOR, PIN_TEST_SENSOR, GPIO_PIN_RESET  );
+}
+
+__STATIC_INLINE void __ledsERROR_1( void )
+{
+	leds_set_NET_status(TEST_MODULE_ERROR_1);
+}
+
+__STATIC_INLINE void __ledsERROR_2( void )
+{
+	leds_set_NET_status(TEST_MODULE_ERROR_2);
+}
+
+__STATIC_INLINE void __ledsERROR_3( void )
+{
+	leds_set_NET_status(TEST_MODULE_ERROR_3);
+}
+
+__STATIC_INLINE void __ledsERROR_4( void )
+{
+	leds_set_NET_status(TEST_MODULE_ERROR_4);
+}
+
+__STATIC_INLINE void __modbusTask(void)
+{
+    static uint8_t tx_rx = 0;
+
+    if (tx_rx == 3) {
+    	modbus_test_rcx();
+        tx_rx = 0;
+    }
+    else {
+    	if (tx_rx == 0) {
+    		modbus_test_trx();
+    	}
+        tx_rx++;
+    }
+}
+
+void test_prod_task( void )
+{
+	static enum
+	{
+		INIT, WAITING_LIGHT, REED, LTE_NB, MBUS_TEST, MODBUS_TEST, SENSOR_TEST, PULSE_TEST, ERROR, LAST
+	} status = INIT;
+
+	static uint32_t tick, tick_ini;
+	static uint32_t tries = 3;
+	int8_t run_test;
+
+	if ( status == INIT ) {
+		run_test = __testDetection();
+//		run_test = 1;
+	    if ( -1 == run_test ) {
+	    	return;
+		} else if ( 1 == run_test ) {
+			run = 1;
+			modbus_test_as11_get();
+		}
+	}
+
+	if (run == 0) {
+		return;
+	}
+
+	if ( MODBUS_TEST == status ) {
+		__modbusTask();
+	}
+
+	switch(status) {
+	case INIT:
+		tick_ini = HAL_GetTick();
+		tick     = Tick_Get(SECONDS);
+		status++;
+		break;
+	case WAITING_LIGHT:
+    	if (run) {
+			if ( 1 == tamper_on ) {
+				__ledsON();
+				tick_ini = HAL_GetTick();
+				tick     = Tick_Get(SECONDS);
+				status++;
+			}
+    	}
+		break;
+	case REED:
+		if ( (Tick_Get(SECONDS) - tick) > 2 ) {
+    		if ( 1 == reed_on ) {
+    			__ledsOff();
+    			reed_on  = 0;
+    			tick_ini = HAL_GetTick();
+    			tick     = Tick_Get(SECONDS);
+    			status++;
+    		}
+		}
+		break;
+    case LTE_NB:
+    	if ( GPIO_PIN_SET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) {
+    		if ( (Tick_Get(SECONDS) - tick) > 2 ) {
+				if ( 1 == ME910_test_ok() ) {
+					error[ERROR_NB] = OK;
+					tick_ini        = HAL_GetTick();
+					tick            = Tick_Get(SECONDS);
+					status++;
+#if defined(UNE82326)
+			une82326_set_start_comm(1);
+#elif defined(MBUS)
+					mbus_set_start_comm(1);
+#endif
+				} else if ( -1 == ME910_test_ok() ) {
+					__ledsERROR_1();
+					error[ERROR_NB] = NOK;
+					status          = ERROR;
+				}
+    		}
+    	}
+    break;
+    case MBUS_TEST:
+    	if ( GPIO_PIN_SET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) {
+    		if ( (Tick_Get(SECONDS) - tick) > 2) {
+#if defined (MBUS)
+    			if ( 1 == mbus_end() ) {
+    				if ( 1 == mbus_check_mbus_frame_ok() ) {
+#elif defined (UNE82326)
+    			if ( 1 == une82326_get_last_device() ) {
+    				if ( A_PLUS_FRAME == une82326_get_frame_type()) {
+#endif
+    					leds_LED_Off(LED_GREEN);
+    					modbus_sensors_set_serial_config_baud_rate(9600);
+    					serialRS485_deInit();
+    					serialRS485_module_init(9600);
+    					error[ERROR_MBUS] = OK;
+    					tick_ini          = HAL_GetTick();
+    					tick              = Tick_Get(SECONDS);
+    					status++;
+    				} else {
+						__ledsERROR_2();
+						error[ERROR_MBUS] = NOK;
+						status            = ERROR;
+					}
+    			} else if ( (Tick_Get(SECONDS) - tick) > 20) {
+					__ledsERROR_2();
+					error[ERROR_MBUS] = NOK;
+					status            = ERROR;
+    			}
+    		}
+    	}
+    	break;
+    case MODBUS_TEST:
+    	if ( GPIO_PIN_SET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) {
+    		if ( (Tick_Get(SECONDS) - tick) > 4) {
+                float sound = ( float ) modbus_test_as11_get() / 10.0;
+                if ( sound > 30 ) {
+                	__ledModBusEnOff();
+                	AD_SetGetADCData(1);
+                    error[ERROR_MODBUS] = OK;
+					tick_ini            = HAL_GetTick();
+					tick                = Tick_Get(SECONDS);
+                    status++;
+                } else if (sound <= 30) {
+                    if (tries-- == 0) {
+                        __ledsERROR_4();
+                        error[ERROR_MODBUS] = NOK;
+                        status              = ERROR;
+                    }
+                }
+    		}
+    	}
+    	break;
+    case SENSOR_TEST:
+    	if ( GPIO_PIN_SET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) {
+    		if ( (Tick_Get(SECONDS) - tick) > 2) {
+    			if ( 1 == AD_getEnd() ) {
+    				float_t pressure = (AD_GetAverage()/1000 + 0.2176)/0.2943;
+    				if ( pressure > 2.00 ) {
+    					__ledSEnOn();
+    					pulses_init();
+    					error[ERROR_SENSOR] = OK;
+    					tick_ini            = HAL_GetTick();
+    					tick                = Tick_Get(SECONDS);
+                        status++;
+    				} else {
+    					__ledsERROR_3();
+                        error[ERROR_SENSOR] = NOK;
+                        status++;
+    				}
+    			}
+    		}
+    	}
+    	break;
+    case PULSE_TEST:
+    	if ( GPIO_PIN_SET == HAL_GPIO_ReadPin( PORT_TEST_IN, PIN_TEST_IN ) ) {
+    		if ( (Tick_Get(SECONDS) - tick) > 2) {
+    			if ( GPIO_PIN_RESET == HAL_GPIO_ReadPin( GPIOC, GPIO_PIN_14 ) ) {
+    				__ledSEnOff();
+    				error[ERROR_PULSE] = OK;
+					tick_ini           = HAL_GetTick();
+					tick               = Tick_Get(SECONDS);
+                    status++;
+    			} else if ( ( HAL_GetTick() - tick_ini ) > 10000 ){
+    				__ledsERROR_3();
+                    error[ERROR_PULSE] = NOK;
+                    status++;
+    			}
+    		}
+    	}
+    	break;
+    case ERROR:
+    	error[ERROR_FINAL] = error[ERROR_NB] & error[ERROR_MBUS] & error[ERROR_MODBUS] & error[ERROR_SENSOR] & error[ERROR_PULSE];
+    	if ( error[ERROR_FINAL] == OK ) {
+    		__ledsON();
+    	}
+    	run = 0;
+    	break;
+    case LAST:
+    default:
+    	break;
+	}
+
+	if ( ( HAL_GetTick() - tick_ini ) > 120000 ) {
+		status = LAST;
+		test_prod_run(0);
+	}
+}
+
+void test_prod_run( uint8_t _run )
+{
+	run = _run;
+}
+
+uint8_t test_prod_run_on( void )
+{
+	return run;
+}

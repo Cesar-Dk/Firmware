@@ -1,0 +1,22 @@
+data='[ \
+	{ \
+		"image": "news/EclipseUpdate.png", \
+		"link": "", \
+		"caption": "" \
+	}, \
+	{ \
+		"image": "news/Wikis.png", \
+		"link": "", \
+		"caption": "" \
+	}, \
+	{ \
+		"image": "news/RemoteSetup.png", \
+		"link": "", \
+		"caption": "" \
+	}, \
+	{ \
+		"image": "news/ChineseVideos.png", \
+		"link": "", \
+		"caption": "" \
+	} \
+]';
