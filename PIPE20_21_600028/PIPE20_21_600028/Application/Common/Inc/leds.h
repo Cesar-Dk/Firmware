@@ -1,0 +1,18 @@
+lass="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga0d3a98cd87ebc60a90d91137462a5608">ADC_SMPR1_SMP6_1</a>&#160;&#160;&#160;(0x2UL &lt;&lt; ADC_SMPR1_SMP6_Pos)</td></tr>
+<tr class="separator:ga0d3a98cd87ebc60a90d91137462a5608"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaee77200264c0a8f0ab3c2eeb250e9e76"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gaee77200264c0a8f0ab3c2eeb250e9e76">ADC_SMPR1_SMP6_2</a>&#160;&#160;&#160;(0x4UL &lt;&lt; ADC_SMPR1_SMP6_Pos)</td></tr>
+<tr class="separator:gaee77200264c0a8f0ab3c2eeb250e9e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf2dcc84f18d18e1fb7cc07ca9d5c56c3"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ADC_SMPR1_SMP7_Pos</b>&#160;&#160;&#160;(21U)</td></tr>
+<tr class="separator:gaf2dcc84f18d18e1fb7cc07ca9d5c56c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga878a6a4d1e0415217e65e426a2e0b2de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga878a6a4d1e0415217e65e426a2e0b2de">ADC_SMPR1_SMP7_Msk</a>&#160;&#160;&#160;(0x7UL &lt;&lt; ADC_SMPR1_SMP7_Pos)</td></tr>
+<tr class="separator:ga878a6a4d1e0415217e65e426a2e0b2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga109b3f5b8d67170f9eb030e7cb331ff7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga109b3f5b8d67170f9eb030e7cb331ff7">ADC_SMPR1_SMP7</a>&#160;&#160;&#160;<a class="el" href="group___peripheral___registers___bits___definition.html#ga878a6a4d1e0415217e65e426a2e0b2de">ADC_SMPR1_SMP7_Msk</a></td></tr>
+<tr class="separator:ga109b3f5b8d67170f9eb030e7cb331ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga68c8a6b2e2604fef144de8c9752743c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga68c8a6b2e2604fef144de8c9752743c6">ADC_SMPR1_SMP7_0</a>&#160;&#160;&#160;(0x1UL &lt;&lt; ADC_SMPR1_SMP7_Pos)</td></tr>
+<tr class="separator:ga68c8a6b2e2604fef144de8c9752743c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b96aff1fdca529774066740e2ddcbfd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga6b96aff1fdca529774066740e2ddcbfd">ADC_SMPR1_SMP7_1</a>&#160;&#160;&#160;(0x2UL &lt;&lt; ADC_SMPR1_SMP7_Pos)</td></tr>
+<tr class="separator:ga6b96aff1fdca529774066740e2ddcbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3ed1fcfd6c79a585f8fd442595c81be6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga3ed1fcfd6c79a585f8fd442595c81be6">ADC_SMPR1_SMP7_2</a>&#160;&#160;&#160;(0x4UL &lt;&lt; ADC_SMPR1_SMP7_Pos)</td></tr>
+<tr class="separator:ga3ed1fcfd6c79a585f8fd442595c81be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga406

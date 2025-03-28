@@ -1,0 +1,4 @@
+ght" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga11fbbdaa929d9ecf3054aaaed0285b05">ADC_JSQR_JL_Msk</a>&#160;&#160;&#160;(0x3UL &lt;&lt; ADC_JSQR_JL_Pos)</td></tr>
+<tr class="separator:ga11fbbdaa929d9ecf3054aaaed0285b05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa624d1fe34014b88873e2dfa91f79232"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gaa624d1fe34014b88873e2dfa91f79232">ADC_JSQR_JL</a>&#160;&#160;&#160;<a class="el" href="group___peripheral___registers___bits___definition.html#ga11fbbdaa929d9ecf3054aaaed0285b05">ADC_JSQR_JL_Msk</a></td></tr>
+<tr class="separator:gaa624d1fe34014b88873e2dfa91f79232"><t

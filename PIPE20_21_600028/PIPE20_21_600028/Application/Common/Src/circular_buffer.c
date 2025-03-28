@@ -1,0 +1,23 @@
+a name="l00519"></a><span class="lineno">  519</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;{</div>
+<div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t PCR;        </div>
+<div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t SR;         </div>
+<div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t PMEM;       </div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t PATT;       </div>
+<div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;  uint32_t      RESERVED0;  </div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t ECCR;       </div>
+<div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;} <a class="code" href="struct_f_m_c___bank3___type_def.html">FMC_Bank3_TypeDef</a>;</div>
+<div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160; </div>
+<div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct</span></div>
+<div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;{</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t MODER;       </div>
+<div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t OTYPER;      </div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t OSPEEDR;     </div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t PUPDR;       </div>
+<div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t IDR;         </div>
+<div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t ODR;         </div>
+<div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t BSRR;        </div>
+<div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t LCKR;        </div>
+<div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t AFR[2];      </div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;  <a class="code" href="_drivers_2_c_m_s_i_s_2_core_2_include_2core__armv81mml_8h.html#aec43007d9998a0a0e01faede4133d6be">__IO</a> uint32_t BRR;         </div>
+<div class="line"><a name="l00545"></a><span

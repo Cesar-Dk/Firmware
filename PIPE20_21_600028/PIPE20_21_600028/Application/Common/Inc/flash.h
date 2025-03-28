@@ -1,0 +1,17 @@
+ass="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;<span class="comment">/******************************************************************************/</span></div>
+<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160; </div>
+<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;<span class="comment">/*</span></div>
+<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;<span class="comment"> * @brief Specific device feature definitions (not present on all devices in the STM32L4 serie)</span></div>
+<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;<span class="comment"> */</span></div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;<span class="comment">/* Note: No specific macro feature on this device */</span></div>
+<div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160; </div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;<span class="comment">/********************  Bit definition for ADC_ISR register  *******************/</span></div>
+<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;<span class="preprocessor">#define ADC_ISR_ADRDY_Pos              (0U)</span></div>
+<div class="line"><a name="l01288"></a><span class="lineno"><a class="line" href="group___peripheral___registers___bits___definition.html#ga7d192dae14cf2daa81ea3c7fe02082bd"> 1288</a></span>&#160;<span class="preprocessor">#define ADC_ISR_ADRDY_Msk              (0x1UL &lt;&lt; ADC_ISR_ADRDY_Pos)            </span></div>
+<div class="line"><a name="l01289"></a><span class="lineno"><a class="line" href="group___peripheral___registers___bits___definition.html#ga06cdc9a3bf111d8c50ecba178daa90d8"> 1289</a></span>&#160;<span class="preprocessor">#define ADC_ISR_ADRDY                  ADC_ISR_ADRDY_Msk                       </span></div>
+<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;<span class="preprocessor">#define ADC_ISR_EOSMP_Pos              (1U)</span></div>
+<div class="line"><a name="l01291"></a><span class="lineno"><a class="line" href="group___peripheral___registers___bits___definition.html#ga0aca01f1e94e9cb20a24476342581e4b"> 1291</a></span>&#160;<span class="preprocessor">#define ADC_ISR_EOSMP_Msk              (0x1UL &lt;&lt; ADC_ISR_EOSMP_Pos)            </span></div>
+<div class="line"><a name="l01292"></a><span class="lineno"><a class="line" href="group___peripheral___registers___bits___definition.html#ga0e8d87957a25e701a13575d635628d11"> 1292</a></span>&#160;<span class="preprocessor">#define ADC_ISR_EOSMP                  ADC_ISR_EOSMP_Msk                       </span></div>
+<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;<span class="preprocessor">#define ADC_ISR_EOC_Pos                (2U)</span></div>
+<div class="line"><a name="l01294"></a><span class="lineno"><a class="line" href="group___peripheral___registers___bits___definition.html#ga7d3a1b6e32741acec254760c4114270a"> 1294</a></span>&#160;<span class="preprocessor">#define ADC_ISR_EOC_Msk                (0x1UL &lt;&lt; ADC_ISR_EOC_Pos)              </span></div>
+<div class="line"><a name="l01295"></a><span class="lineno

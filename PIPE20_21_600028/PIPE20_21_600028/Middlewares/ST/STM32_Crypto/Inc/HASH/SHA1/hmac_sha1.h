@@ -1,0 +1,12 @@
+/a>&#160;&#160;&#160;(0x001UL &lt;&lt; ADC_OFR2_OFFSET2_Pos)</td></tr>
+<tr class="separator:ga9fed0b6e4a2e124d5d43237645c2602f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga86682d244766d197e1184c786aff6ace"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga86682d244766d197e1184c786aff6ace">ADC_OFR2_OFFSET2_1</a>&#160;&#160;&#160;(0x002UL &lt;&lt; ADC_OFR2_OFFSET2_Pos)</td></tr>
+<tr class="separator:ga86682d244766d197e1184c786aff6ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3131174158542048297b73f14b3a58d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gac3131174158542048297b73f14b3a58d">ADC_OFR2_OFFSET2_2</a>&#160;&#160;&#160;(0x004UL &lt;&lt; ADC_OFR2_OFFSET2_Pos)</td></tr>
+<tr class="separator:gac3131174158542048297b73f14b3a58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf6d4eba692aad2900d92a81b0f041254"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gaf6d4eba692aad2900d92a81b0f041254">ADC_OFR2_OFFSET2_3</a>&#160;&#160;&#160;(0x008UL &lt;&lt; ADC_OFR2_OFFSET2_Pos)</td></tr>
+<tr class="separator:gaf6d4eba692aad2900d92a81b0f041254"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga28fd43478059f95548cd9b2f446b4e0b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga28fd43478059f95548cd9b2f446b4e0b">ADC_OFR2_OFFSET2_4</a>&#160;&#160;&#160;(0x010UL &lt;&lt; ADC_OFR2_OFFSET2_Pos)</td></tr>
+<tr class="separator:ga28fd43478059f95548cd9b2f446b4e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7e93ffc6e4b2d5841fcd707c523a3358"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga7e93ffc6e4b2d5841fcd707c523a3358">ADC_OFR2_OFFSET2_5</a>&#160;&#160;&#160;(0x020UL &lt;&lt; ADC_OFR2_OFFSET2_Pos)</td></tr>
+<tr class="separator:ga7e

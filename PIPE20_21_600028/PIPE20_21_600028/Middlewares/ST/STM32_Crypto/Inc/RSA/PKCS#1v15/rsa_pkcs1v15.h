@@ -1,0 +1,17 @@
+R_JEXTSEL_Pos)</td></tr>
+<tr class="separator:ga17e399d531a12e42861ea7749bde5dc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8c313e13190298bb35cc7f2c0af33bcf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga8c313e13190298bb35cc7f2c0af33bcf">ADC_JSQR_JEXTSEL_2</a>&#160;&#160;&#160;(0x4UL &lt;&lt; ADC_JSQR_JEXTSEL_Pos)</td></tr>
+<tr class="separator:ga8c313e13190298bb35cc7f2c0af33bcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4ed510fc95d191754a981fc26a2a3e7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gab4ed510fc95d191754a981fc26a2a3e7">ADC_JSQR_JEXTSEL_3</a>&#160;&#160;&#160;(0x8UL &lt;&lt; ADC_JSQR_JEXTSEL_Pos)</td></tr>
+<tr class="separator:gab4ed510fc95d191754a981fc26a2a3e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae44549c0712b73dca2bf8685f270623d"><td class="memItemLeft" align="right" valign="top">
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ADC_JSQR_JEXTEN_Pos</b>&#160;&#160;&#160;(6U)</td></tr>
+<tr class="separator:gae44549c0712b73dca2bf8685f270623d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaccc3fed84855675ca9a8d056aa9eaf17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gaccc3fed84855675ca9a8d056aa9eaf17">ADC_JSQR_JEXTEN_Msk</a>&#160;&#160;&#160;(0x3UL &lt;&lt; ADC_JSQR_JEXTEN_Pos)</td></tr>
+<tr class="separator:gaccc3fed84855675ca9a8d056aa9eaf17"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad27b9dc322ac84ef5fc8b80094ae4e3d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#gad27b9dc322ac84ef5fc8b80094ae4e3d">ADC_JSQR_JEXTEN</a>&#160;&#160;&#160;<a class="el" href="group___peripheral___registers___bits___definition.html#gaccc3fed84855675ca9a8d056aa9eaf17">ADC_JSQR_JEXTEN_Msk</a></td></tr>
+<tr class="separator:gad27b9dc322ac84ef5fc8b80094ae4e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3f52a4af826de1bcfa5cd6db9d3e7ce8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga3f52a4af826de1bcfa5cd6db9d3e7ce8">ADC_JSQR_JEXTEN_0</a>&#160;&#160;&#160;(0x1UL &lt;&lt; ADC_JSQR_JEXTEN_Pos)</td></tr>
+<tr class="separator:ga3f52a4af826de1bcfa5cd6db9d3e7ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2e81ea3a379455b49cc3d40fb431cbb6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___peripheral___registers___bits___definition.html#ga2e81ea3a379455b49cc3d40fb431cbb6">ADC_JSQR_JEXTEN_1</a>&#160;&#160;&#160;(0x2UL &lt;&lt; ADC_JSQR_JEXTEN_Pos)</td></tr>
+<tr class="separator:ga2e81ea3a379455b49cc3d40fb431cbb6"><td class="memSeparator" colspan="2">&#160;</td></t
